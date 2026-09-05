@@ -1,0 +1,26 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Set up the project",
+      "description": "Initialize backend and frontend folders",
+      "completed": true,
+      "createdAt": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "title": "Build the REST API",
+      "description": "Add create, read, update, delete routes",
+      "completed": false,
+      "createdAt": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "title": "Test task",
+      "description": "",
+      "completed": false,
+      "createdAt": "2026-09-05T08:50:23.770Z"
+    }
+  ],
+  "nextId": 4
+}
