@@ -3,96 +3,62 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jordan Rivera — Portfolio</title>
+<title>Intro to JavaScript — Interactive Elements</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<nav class="dots">
-  <a href="#intro" class="active" title="Intro"></a>
-  <a href="#projects" title="Projects"></a>
-  <a href="#skills" title="Skills"></a>
-  <a href="#contact" title="Contact"></a>
-</nav>
-
 <div class="container">
+  <h1>Intro to JavaScript</h1>
+  <p>Three small interactive demos: a dropdown menu, a modal, and a validated form.</p>
 
-  <section class="intro" id="intro">
-    <p class="greeting">Hi, my name is</p>
-    <h1>Jordan Rivera</h1>
-    <h2>Front-End Developer</h2>
-    <p>I build fast, accessible, and visually clean web experiences. Currently focused on modern CSS layout and JavaScript-driven interactivity.</p>
-    <a href="#projects" class="btn">View My Work</a>
-  </section>
-
-  <section id="projects">
-    <h2 class="section-title">Projects</h2>
-    <div class="projects-grid">
-      <div class="project-card">
-        <h3>Weather Dashboard</h3>
-        <p>A live weather app pulling from a public API, with animated icons and a 5-day forecast.</p>
-        <div class="tags"><span class="tag">JavaScript</span><span class="tag">API</span><span class="tag">CSS Grid</span></div>
-      </div>
-      <div class="project-card">
-        <h3>Task Manager</h3>
-        <p>A drag-and-drop to-do app with local storage persistence and category filters.</p>
-        <div class="tags"><span class="tag">JavaScript</span><span class="tag">LocalStorage</span></div>
-      </div>
-      <div class="project-card">
-        <h3>Recipe Finder</h3>
-        <p>Search thousands of recipes by ingredient, with responsive card layouts.</p>
-        <div class="tags"><span class="tag">HTML</span><span class="tag">Flexbox</span><span class="tag">API</span></div>
-      </div>
-      <div class="project-card">
-        <h3>Personal Blog</h3>
-        <p>A statically generated blog with a clean reading experience and dark mode toggle.</p>
-        <div class="tags"><span class="tag">HTML</span><span class="tag">CSS</span></div>
+  <section>
+    <h2>1. Dropdown Menu</h2>
+    <div class="dropdown">
+      <button class="dropdown-btn" id="dropdownBtn">Options ▾</button>
+      <div class="dropdown-menu" id="dropdownMenu">
+        <a href="#">Profile</a>
+        <a href="#">Settings</a>
+        <a href="#">Log Out</a>
       </div>
     </div>
   </section>
 
-  <section id="skills">
-    <h2 class="section-title">Skills</h2>
-    <div class="skills-list">
-      <span class="skill-pill">HTML5</span>
-      <span class="skill-pill">CSS3 / Flexbox / Grid</span>
-      <span class="skill-pill">JavaScript (ES6+)</span>
-      <span class="skill-pill">React</span>
-      <span class="skill-pill">Git &amp; GitHub</span>
-      <span class="skill-pill">Responsive Design</span>
-      <span class="skill-pill">REST APIs</span>
+  <section>
+    <h2>2. Modal Dialog</h2>
+    <button class="btn" id="openModalBtn">Open Modal</button>
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="modal">
+        <button class="close-btn" id="closeModalBtn">&times;</button>
+        <h3>Hello there!</h3>
+        <p>This is a modal built with vanilla JavaScript. Click the &times; or outside the box to close it.</p>
+      </div>
     </div>
   </section>
 
-  <section class="contact" id="contact">
-    <h2 class="section-title">Get In Touch</h2>
-    <p>Have a project in mind or just want to say hi? My inbox is always open.</p>
-    <div class="contact-links">
-      <a href="mailto:jordan.rivera@example.com">Email Me</a>
-      <a href="#">GitHub</a>
-      <a href="#">LinkedIn</a>
-    </div>
+  <section>
+    <h2>3. Form Validation</h2>
+    <form id="signupForm" novalidate>
+      <div>
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username">
+        <div class="error-msg" id="usernameError"></div>
+      </div>
+      <div>
+        <label for="email">Email</label>
+        <input type="text" id="email" name="email">
+        <div class="error-msg" id="emailError"></div>
+      </div>
+      <div>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password">
+        <div class="error-msg" id="passwordError"></div>
+      </div>
+      <button type="submit" class="dropdown-btn">Sign Up</button>
+      <p class="success-msg" id="formSuccess"></p>
+    </form>
   </section>
-
 </div>
 
-<footer>&copy; 2026 Jordan Rivera. Built with HTML &amp; CSS.</footer>
-
-<script>
-  // Highlight active dot nav on scroll
-  const sections = document.querySelectorAll("section");
-  const dots = document.querySelectorAll("nav.dots a");
-  window.addEventListener("scroll", () => {
-    let current = "";
-    sections.forEach(sec => {
-      if (window.scrollY >= sec.offsetTop - window.innerHeight / 2) {
-        current = sec.id;
-      }
-    });
-    dots.forEach(dot => {
-      dot.classList.toggle("active", dot.getAttribute("href") === "#" + current);
-    });
-  });
-</script>
+<script src="script.js"></script>
 </body>
 </html>
