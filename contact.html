@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact | Simple Static Site</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <nav class="navbar">
+    <div class="brand">MyStaticSite</div>
+    <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html" class="active">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <h1>Get In Touch</h1>
+  <p>Fill out the form below — this is a front-end-only demo, so it won't actually send an email, but it shows a confirmation message on submit.</p>
+
+  <form class="contact-form" id="contactForm">
+    <input type="text" name="name" placeholder="Your Name" required>
+    <input type="email" name="email" placeholder="Your Email" required>
+    <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+    <button type="submit" class="btn">Send Message</button>
+    <p class="form-status" id="formStatus"></p>
+  </form>
+</main>
+
+<footer>
+  <p>&copy; 2026 MyStaticSite. Built with HTML &amp; CSS.</p>
+</footer>
+
+<script src="nav.js"></script>
+<script>
+  document.getElementById("contactForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    document.getElementById("formStatus").textContent = "Thanks! Your message has been received (demo only).";
+    this.reset();
+  });
+</script>
+</body>
+</html>

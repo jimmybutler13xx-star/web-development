@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home | Simple Static Site</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <nav class="navbar">
+    <div class="brand">MyStaticSite</div>
+    <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+    <ul>
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Build Once, Serve Everywhere</h1>
+  <p>A clean, multi-page static website built with plain HTML and CSS — responsive from phone to desktop.</p>
+  <a href="about.html" class="btn">Learn More</a>
+</section>
+
+<main>
+  <h2>What's Inside</h2>
+  <div class="cards">
+    <div class="card">
+      <h3>Semantic HTML</h3>
+      <p>Structured with header, nav, main, and footer landmarks for accessibility.</p>
+    </div>
+    <div class="card">
+      <h3>Custom CSS</h3>
+      <p>Hand-written styles, no framework — full control over layout and design.</p>
+    </div>
+    <div class="card">
+      <h3>Responsive</h3>
+      <p>A media query collapses the nav into a mobile-friendly toggle menu.</p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <p>&copy; 2026 MyStaticSite. Built with HTML &amp; CSS.</p>
+</footer>
+
+<script src="nav.js"></script>
+</body>
+</html>
