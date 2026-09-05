@@ -1,15 +1,16 @@
 {
-  "name": "crud-backend",
+  "name": "auth-system",
   "version": "1.0.0",
-  "description": "Express REST API for a full-stack CRUD task manager",
+  "description": "User authentication system with registration, login, JWT sessions, and password hashing",
   "main": "server.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js"
+    "start": "node server.js"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2"
   }
 }
