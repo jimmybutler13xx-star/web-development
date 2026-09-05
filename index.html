@@ -3,34 +3,139 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>To-Do List App</title>
-<link rel="stylesheet" href="style.css">
+<title>React Calculator</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Arial, sans-serif;
+    background: #1b1f2a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  .calculator {
+    background: #262c3d;
+    border-radius: 16px;
+    padding: 1.2rem;
+    width: 300px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+  }
+  .display {
+    background: #10131c;
+    color: white;
+    text-align: right;
+    padding: 1.2rem;
+    border-radius: 10px;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    min-height: 4rem;
+    overflow-x: auto;
+    word-break: break-all;
+  }
+  .display .expression { font-size: 0.9rem; color: #8891a8; min-height: 1.2rem; }
+  .keypad {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.6rem;
+  }
+  button.key {
+    padding: 1rem 0;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: #3a4159;
+    color: white;
+    transition: filter 0.15s;
+  }
+  button.key:hover { filter: brightness(1.15); }
+  button.operator { background: #f2994a; }
+  button.equals { background: #6ee7b7; color: #10131c; grid-column: span 2; }
+  button.clear { background: #e05252; }
+  button.zero { grid-column: span 2; }
+</style>
 </head>
 <body>
 
-<div class="app">
-  <h1>My Tasks</h1>
+<div id="root"></div>
 
-  <div class="input-row">
-    <input type="text" id="taskInput" placeholder="Add a new task..." maxlength="120">
-    <button id="addBtn">Add</button>
-  </div>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-  <div class="filters">
-    <button class="filter-btn active" data-filter="all">All</button>
-    <button class="filter-btn" data-filter="active">Active</button>
-    <button class="filter-btn" data-filter="completed">Completed</button>
-  </div>
+<script type="text/babel">
+const { useState } = React;
 
-  <ul id="taskList"></ul>
-  <p class="empty-msg" id="emptyMsg" style="display:none;">No tasks yet — add one above!</p>
+// A single calculator button — receives label, click handler, and styling via props
+function Key({ label, onClick, className = "" }) {
+  return (
+    <button className={`key ${className}`} onClick={() => onClick(label)}>
+      {label}
+    </button>
+  );
+}
 
-  <div class="stats">
-    <span id="taskCount">0 tasks left</span>
-    <button id="clearCompleted">Clear completed</button>
-  </div>
-</div>
+// The screen — receives current expression + result as props (no internal state)
+function Display({ expression, value }) {
+  return (
+    <div className="display">
+      <div className="expression">{expression || "\u00A0"}</div>
+      <div>{value}</div>
+    </div>
+  );
+}
 
-<script src="script.js"></script>
+function Calculator() {
+  const [expression, setExpression] = useState("");
+  const [value, setValue] = useState("0");
+
+  function handleKey(label) {
+    if (label === "C") {
+      setExpression("");
+      setValue("0");
+      return;
+    }
+    if (label === "=") {
+      try {
+        // Safe-ish eval limited to digits/operators only
+        if (/^[0-9+\-*/.() ]+$/.test(expression)) {
+          const result = Function(`"use strict"; return (${expression})`)();
+          setValue(String(result));
+          setExpression(String(result));
+        }
+      } catch {
+        setValue("Error");
+      }
+      return;
+    }
+
+    setExpression(prev => (value !== "0" && prev === "" ? value : prev) + label);
+    setValue(prev => (prev === "0" ? label : prev + label));
+  }
+
+  const keys = [
+    { label: "C", className: "clear" },
+    { label: "(" }, { label: ")" }, { label: "/", className: "operator" },
+    { label: "7" }, { label: "8" }, { label: "9" }, { label: "*", className: "operator" },
+    { label: "4" }, { label: "5" }, { label: "6" }, { label: "-", className: "operator" },
+    { label: "1" }, { label: "2" }, { label: "3" }, { label: "+", className: "operator" },
+    { label: "0", className: "zero" }, { label: "." }, { label: "=", className: "equals" },
+  ];
+
+  return (
+    <div className="calculator">
+      <Display expression={expression} value={value} />
+      <div className="keypad">
+        {keys.map((k, i) => (
+          <Key key={i} label={k.label} className={k.className} onClick={handleKey} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<Calculator />);
+</script>
 </body>
 </html>
