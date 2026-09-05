@@ -1,102 +1,117 @@
-// ---------- 1. Dropdown menu ----------
-const dropdownBtn = document.getElementById("dropdownBtn");
-const dropdownMenu = document.getElementById("dropdownMenu");
+const STORAGE_KEY = "todo-app-tasks";
 
-dropdownBtn.addEventListener("click", (e) => {
-  e.stopPropagation();
-  dropdownMenu.classList.toggle("show");
-});
+let tasks = loadTasks();
+let currentFilter = "all";
 
-// Close dropdown when clicking anywhere else
-document.addEventListener("click", () => {
-  dropdownMenu.classList.remove("show");
-});
+const taskInput = document.getElementById("taskInput");
+const addBtn = document.getElementById("addBtn");
+const taskList = document.getElementById("taskList");
+const emptyMsg = document.getElementById("emptyMsg");
+const taskCount = document.getElementById("taskCount");
+const clearCompletedBtn = document.getElementById("clearCompleted");
+const filterBtns = document.querySelectorAll(".filter-btn");
 
-// ---------- 2. Modal ----------
-const openModalBtn = document.getElementById("openModalBtn");
-const closeModalBtn = document.getElementById("closeModalBtn");
-const modalOverlay = document.getElementById("modalOverlay");
-
-openModalBtn.addEventListener("click", () => modalOverlay.classList.add("show"));
-closeModalBtn.addEventListener("click", () => modalOverlay.classList.remove("show"));
-
-// Close modal when clicking the dark overlay (but not the modal box itself)
-modalOverlay.addEventListener("click", (e) => {
-  if (e.target === modalOverlay) modalOverlay.classList.remove("show");
-});
-
-// Close modal with Escape key
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") modalOverlay.classList.remove("show");
-});
-
-// ---------- 3. Form validation ----------
-const form = document.getElementById("signupForm");
-const usernameInput = document.getElementById("username");
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-
-const usernameError = document.getElementById("usernameError");
-const emailError = document.getElementById("emailError");
-const passwordError = document.getElementById("passwordError");
-const formSuccess = document.getElementById("formSuccess");
-
-function validateUsername() {
-  const value = usernameInput.value.trim();
-  if (value.length < 3) {
-    setError(usernameInput, usernameError, "Username must be at least 3 characters.");
-    return false;
+function loadTasks() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
   }
-  clearError(usernameInput, usernameError);
-  return true;
 }
 
-function validateEmail() {
-  const value = emailInput.value.trim();
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailPattern.test(value)) {
-    setError(emailInput, emailError, "Please enter a valid email address.");
-    return false;
-  }
-  clearError(emailInput, emailError);
-  return true;
+function saveTasks() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
 }
 
-function validatePassword() {
-  const value = passwordInput.value;
-  if (value.length < 8) {
-    setError(passwordInput, passwordError, "Password must be at least 8 characters.");
-    return false;
-  }
-  clearError(passwordInput, passwordError);
-  return true;
+function addTask(text) {
+  const trimmed = text.trim();
+  if (!trimmed) return;
+  tasks.push({ id: Date.now(), text: trimmed, completed: false });
+  saveTasks();
+  render();
 }
 
-function setError(input, errorEl, message) {
-  input.classList.add("invalid");
-  errorEl.textContent = message;
+function toggleTask(id) {
+  const task = tasks.find(t => t.id === id);
+  if (task) task.completed = !task.completed;
+  saveTasks();
+  render();
 }
 
-function clearError(input, errorEl) {
-  input.classList.remove("invalid");
-  errorEl.textContent = "";
+function deleteTask(id) {
+  tasks = tasks.filter(t => t.id !== id);
+  saveTasks();
+  render();
 }
 
-// Live validation as the user types
-usernameInput.addEventListener("input", validateUsername);
-emailInput.addEventListener("input", validateEmail);
-passwordInput.addEventListener("input", validatePassword);
+function clearCompleted() {
+  tasks = tasks.filter(t => !t.completed);
+  saveTasks();
+  render();
+}
 
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-  formSuccess.textContent = "";
+function getFilteredTasks() {
+  if (currentFilter === "active") return tasks.filter(t => !t.completed);
+  if (currentFilter === "completed") return tasks.filter(t => t.completed);
+  return tasks;
+}
 
-  const isUsernameValid = validateUsername();
-  const isEmailValid = validateEmail();
-  const isPasswordValid = validatePassword();
+function render() {
+  const filtered = getFilteredTasks();
+  taskList.innerHTML = "";
 
-  if (isUsernameValid && isEmailValid && isPasswordValid) {
-    formSuccess.textContent = "Account created! (This is a front-end demo only.)";
-    form.reset();
+  filtered.forEach(task => {
+    const li = document.createElement("li");
+    li.className = "task" + (task.completed ? " completed" : "");
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = task.completed;
+    checkbox.addEventListener("change", () => toggleTask(task.id));
+
+    const span = document.createElement("span");
+    span.className = "text";
+    span.textContent = task.text;
+
+    const delBtn = document.createElement("button");
+    delBtn.className = "delete";
+    delBtn.textContent = "✕";
+    delBtn.addEventListener("click", () => deleteTask(task.id));
+
+    li.appendChild(checkbox);
+    li.appendChild(span);
+    li.appendChild(delBtn);
+    taskList.appendChild(li);
+  });
+
+  emptyMsg.style.display = filtered.length === 0 ? "block" : "none";
+  const remaining = tasks.filter(t => !t.completed).length;
+  taskCount.textContent = `${remaining} task${remaining !== 1 ? "s" : ""} left`;
+}
+
+addBtn.addEventListener("click", () => {
+  addTask(taskInput.value);
+  taskInput.value = "";
+  taskInput.focus();
+});
+
+taskInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    addTask(taskInput.value);
+    taskInput.value = "";
   }
 });
+
+clearCompletedBtn.addEventListener("click", clearCompleted);
+
+filterBtns.forEach(btn => {
+  btn.addEventListener("click", () => {
+    filterBtns.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentFilter = btn.dataset.filter;
+    render();
+  });
+});
+
+render();
